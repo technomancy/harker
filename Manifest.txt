@@ -1,0 +1,7 @@
+History.txt
+Manifest.txt
+README.rdoc
+Rakefile
+bin/harker
+lib/harker.rb
+test/test_harker.rb

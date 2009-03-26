@@ -92,7 +92,9 @@ module Harker
 
     # 2.3.2 doesn't support tmp_dir config option.
     # TODO: extract patches
-    require 'harker/rails_patches' unless config.respond_to?(:tmp_dir=)
+    abort "You'll need a patched Rails. For now see
+rails_tmp_config.patch included with this gem, but I'll extract
+it to a bundled monkeypatch soon." unless config.respond_to?(:tmp_dir=)
     config.tmp_dir = File.join(@root, '/tmp')
     # TODO: not sure if my Rails patches cover tmp/sessions or tmp/sockets
   end

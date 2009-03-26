@@ -38,7 +38,7 @@ module Harker
     ARGV.push('--daemon') if daemonize
     
     abort "Can't start; pidfile exists at #{pidfile}." if File.exist? pidfile
-    require 'commands/server'
+    require 'harker/server'
   end
 
   def stop
@@ -91,12 +91,8 @@ module Harker
     config.log_path = File.join(@root, 'log', "#{RAILS_ENV}.log")
 
     # 2.3.2 doesn't support tmp_dir config option.
-    # TODO: extract patches
-    abort "You'll need a patched Rails. For now see
-rails_tmp_config.patch included with this gem, but I'll extract
-it to a bundled monkeypatch soon." unless config.respond_to?(:tmp_dir=)
+    require 'harker/rails_configuration' unless config.respond_to?(:tmp_dir=)
     config.tmp_dir = File.join(@root, '/tmp')
-    # TODO: not sure if my Rails patches cover tmp/sessions or tmp/sockets
   end
 
   def load_app

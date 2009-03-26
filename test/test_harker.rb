@@ -3,7 +3,8 @@ require "minitest/unit"
 require 'fileutils'
 require 'open-uri'
 
-require File.dirname(__FILE__) + "/../lib/harker"
+$LOAD_PATH.unshift(File.dirname(__FILE__) + "/../lib/")
+require 'harker'
 
 begin
   ENV['RAILS_ENV'] = 'production'

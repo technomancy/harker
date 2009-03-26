@@ -15,7 +15,7 @@ module Harker
     action = args.shift
 
     unless ACTIONS.include?(action)
-      abort("Usage: #{@name} INSTANCE_DIR (#{ACTIONS.join('|')})")
+      abort "Usage: #{@name} INSTANCE_DIR (#{ACTIONS.join('|')})"
     end
 
     load_app unless action == 'init'
@@ -31,15 +31,19 @@ module Harker
   def start(daemonize = true)
     # can has internal consistency plz, Rails?
     Rails::Rack::LogTailer::EnvironmentLog.replace(Rails.configuration.log_path)
+    # http://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2350
+    # Submitted a patch to Rails, but this lets it work with 2.3.2
 
     ARGV.replace ["--config=#{@root}/config.ru"]
     ARGV.push('--daemon') if daemonize
+    
+    abort "Can't start; pidfile exists at #{pidfile}." if File.exist? pidfile
     require 'commands/server'
   end
 
   def stop
-    # TODO: this depends on sane (non-shared) tmpdir behaviour
-    raise "Can't stop the funk! (Not implemented yet; sorry!)"
+    abort "No pid at #{pidfile}." unless File.exist?(pidfile)
+    Process.kill('TERM', File.read(pidfile).to_i)
   end
 
   def restart
@@ -85,12 +89,19 @@ module Harker
   def configure(config)
     config.database_configuration_file = File.join(@root, 'database.yml')
     config.log_path = File.join(@root, 'log', "#{RAILS_ENV}.log")
-    # config.cache_store = [:file_store, File.join(@root, 'tmp', 'cache')]
-    # Right now this only exists in my local Rails fork.
-    config.tmp_dir = File.join(@root, '/tmp') if config.respond_to?(:tmp_dir=)
+
+    # 2.3.2 doesn't support tmp_dir config option.
+    # TODO: extract patches
+    require 'harker/rails_patches' unless config.respond_to?(:tmp_dir=)
+    config.tmp_dir = File.join(@root, '/tmp')
+    # TODO: not sure if my Rails patches cover tmp/sessions or tmp/sockets
   end
 
   def load_app
     require @name
+  end
+
+  def pidfile
+    File.join(@root, 'tmp', 'pids', 'server.pid')
   end
 end

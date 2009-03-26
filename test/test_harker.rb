@@ -14,11 +14,6 @@ rescue LoadError
   $ cd #{File.dirname(__FILE__) + '/sample'} && rake install_gem"
 end
 
-# TODO: suppress output consistently
-
-# TODO: currently test_start and test_foreground stomp on each
-# other. To get them to pass they need to run in separate processes.
-
 class TestHarker < MiniTest::Unit::TestCase
   ROOT = "/tmp/harker-test-#{Process.pid}"
   URL = 'http://localhost:3000/harks'
@@ -30,14 +25,13 @@ class TestHarker < MiniTest::Unit::TestCase
   end
 
   def setup
-    # TODO: this is too slow; can we share instances between test runs?
-    harker_action('init')
-    harker_action('migrate')
+    unless File.exist?(ROOT)
+      harker_action('init')
+      harker_action('migrate')
+    end
   end
 
-  def teardown
-    FileUtils.rm_rf ROOT
-  end
+  at_exit { FileUtils.rm_rf ROOT }
 
   def test_init
     assert File.exist?(ROOT)
@@ -51,25 +45,10 @@ class TestHarker < MiniTest::Unit::TestCase
     # Make sure actual DB access works.
     assert_equal ['Joy!'], harks.map{ |h| h['tidings'] }
   ensure
-    harker_action('stop')
-  end
-
-  # def test_double_start
-  #   start_server_process
-  #   assert_match(/pidfile exists/, start_server)
-  # ensure
-  #   harker_action('stop')
-  # end
-
-  def test_foreground
-    thread = Thread.new { harker_action('foreground') }
-    sleep 2
-
-    harks = YAML.load(open(URL).read)
-    assert ! File.exists?(ROOT + '/tmp/pids/server.pid'), "Foreground wrote pid."
-    assert_equal ['Joy!'], harks.map{ |h| h['tidings'] }
-  ensure
-    thread.kill
+    begin
+      harker_action('stop')
+    rescue SystemExit
+    end
   end
 
   def test_stop
@@ -97,7 +76,7 @@ class TestHarker < MiniTest::Unit::TestCase
 
   def start_server_process
     `cd #{File.dirname(__FILE__)}/.. ; ruby -I:lib test/sample/bin/sample_rails #{ROOT} start`
-    sleep 2
+    loop { break if File.exist?(ROOT + '/tmp/pids/server.pid'); sleep 0.1 }
   end
 end
 

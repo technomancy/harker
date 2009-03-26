@@ -62,9 +62,17 @@ module Harker
     require 'commands/console'
   end
 
+  def configure(config)
+    # config.instance_eval { @root_path = root }
+    config.database_configuration_file = File.join(@root, 'database.yml')
+    config.log_path = File.join(@root, 'log', "#{environment}.log")
+    config.log_path = [:file_store,
+                       File.join(@root, 'tmp', 'cache', "#{environment}.log")]
+    # TODO: pids? sessions? sockets?
+  end
+
   # :nodoc:
   def load_app
-    # TODO: teach Rails to honor the instance's db.yml, log/ and tmp/
     require name
   end
 end

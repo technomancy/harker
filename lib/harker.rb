@@ -85,12 +85,9 @@ module Harker
   def configure(config)
     config.database_configuration_file = File.join(@root, 'database.yml')
     config.log_path = File.join(@root, 'log', "#{RAILS_ENV}.log")
-    config.cache_store = [:file_store, File.join(@root, 'tmp', 'cache')]
-    # TODO: tmp dir? multiple instances will break if they share a tmp
-    # This may require fixing Rails. =\
-
-    # Currently you need to mkdir RAILS_ROOT/tmp and chmod/chown it
-    # after installing your app. This sucks!
+    # config.cache_store = [:file_store, File.join(@root, 'tmp', 'cache')]
+    # Right now this only exists in my local Rails fork.
+    config.tmp_dir = File.join(@root, '/tmp') if config.respond_to?(:tmp_dir=)
   end
 
   def load_app

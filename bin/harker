@@ -1,3 +1,15 @@
 #!/usr/bin/env ruby
 
-abort "you need to write me"
+# TODO: this should be able to take a regular Rails app and help turn
+# it into a gem
+
+begin
+  gem 'hoe'
+rescue LoadError
+  abort 'Hoe not found.'
+end
+
+root = ARGV.shift || Dir.pwd
+
+# TODO: write me!
+Harker.gemify(root)

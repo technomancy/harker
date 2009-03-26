@@ -2,10 +2,10 @@ Manifest.txt
 README.rdoc
 Rakefile
 app/controllers/application_controller.rb
-app/controllers/harkers_controller.rb
+app/controllers/harks_controller.rb
 app/helpers/application_helper.rb
-app/helpers/harkers_helper.rb
-app/models/harker.rb
+app/helpers/harks_helper.rb
+app/models/hark.rb
 bin/sample_rails
 config/boot.rb
 config/database.yml
@@ -20,7 +20,7 @@ config/initializers/new_rails_defaults.rb
 config/initializers/session_store.rb
 config/locales/en.yml
 config/routes.rb
-db/migrate/20090325225423_create_harkers.rb
+db/migrate/20090326050232_create_harks.rb
 lib/sample_rails.rb
 public/404.html
 public/422.html
@@ -44,9 +44,10 @@ script/performance/profiler
 script/plugin
 script/runner
 script/server
-test/fixtures/harkers.yml
-test/functional/harkers_controller_test.rb
+test/fixtures/harks.yml
+test/functional/harks_controller_test.rb
 test/performance/browsing_test.rb
 test/test_helper.rb
-test/unit/harker_test.rb
-test/unit/helpers/harkers_helper_test.rb
+test/unit/hark_test.rb
+test/unit/helpers/harks_helper_test.rb
+tmp

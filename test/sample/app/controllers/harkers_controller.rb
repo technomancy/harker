@@ -1,2 +1,0 @@
-class HarkersController < ApplicationController
-end

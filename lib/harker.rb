@@ -1,40 +1,47 @@
 require 'fileutils'
 
-# Harker lets you deploy Rails apps via RubyGems
+# Harker lets you deploy Rails apps via RubyGems.
 module Harker
-  VERSION = '0.0.1'
-  ACTIONS = %w(start stop restart init migrate console)
+  VERSION = '0.0.2'
+  ACTIONS = %w(start stop restart init migrate console foreground)
 
   module_function
 
   # Dispatch based on user's command
   def launch(name, args)
-    @root = args.shift || Dir.pwd
+    @root = File.expand_path(args.shift || Dir.pwd)
     @name = name
 
     action = args.shift
-    
+
     unless ACTIONS.include?(action)
       abort("Usage: #{@name} INSTANCE_DIR (#{ACTIONS.join('|')})")
     end
 
-    load_app
+    load_app unless action == 'init'
     self.send(action)
   end
 
-  # Start the server
-  def start
-    # TODO: this needs to be way more configurable
-    Rack::Handler::Mongrel.run(ActionController::Dispatcher.new,
-                               :Port => 9292, :Host => "0.0.0.0", :AccessLog => [])
+  # Start the application server in the foreground.
+  def foreground
+    start(false)
   end
 
-  # Stop the server
+  # Start and daemonize the application server
+  def start(daemonize = true)
+    # can has internal consistency plz, Rails?
+    Rails::Rack::LogTailer::EnvironmentLog.replace(Rails.configuration.log_path)
+
+    ARGV.replace ["--config=#{@root}/config.ru"]
+    ARGV.push('--daemon') if daemonize
+    require 'commands/server'
+  end
+
   def stop
-    raise "Not implemented yet; sorry!" # TODO
+    # TODO: this depends on sane (non-shared) tmpdir behaviour
+    raise "Can't stop the funk! (Not implemented yet; sorry!)"
   end
 
-  # Stop and start the application server
   def restart
     stop
     start
@@ -45,34 +52,48 @@ module Harker
     FileUtils.mkdir_p(@root)
     FileUtils.mkdir_p(@root + '/log')
     FileUtils.mkdir_p(@root + '/tmp')
-    FileUtils.cp("#{RAILS_ROOT}/config/database.yml", "#{@root}/database.yml")
+
+    # TODO: use the in-gem copy of database.yml as a base for this
+    File.open("#{@root}/database.yml", 'w') do |fp|
+      # TODO: be smart about environments; bleh
+      fp.puts({ 'production' => { 'adapter' => 'sqlite3',
+                  'database' => @root + '/db.sqlite3',
+                  'pool' => 5, 'timeout' => 5000 }}.to_yaml)
+    end
+
+    # TODO: write a default config.ru?
+
     puts "Initialized #{@name} instance in #{@root}..."
-    puts "Migrate with: #{@name} migrate"
+    puts
+    puts "Configure your database by editing #{@root}/database.yml."
+    puts "Optionally configure your web server via rack in #{@root}/config.ru."
+    puts
+    puts "Migrate your DB with: #{@name} migrate"
     puts "Then launch with: #{@name} start"
   end
 
-  # Perform all pending migrations for this instance
   def migrate
-    ActiveRecord::Migrator.migrate(RAILS_ROOT + '/db',
+    ActiveRecord::Migrator.migrate(RAILS_ROOT + '/db/migrate',
                                    ENV["VERSION"] && ENV["VERSION"].to_i)
   end
 
-  # Run script/console
   def console
-    require 'commands/console'
+    require 'irb'
+    IRB.start
   end
 
   def configure(config)
-    # config.instance_eval { @root_path = root }
     config.database_configuration_file = File.join(@root, 'database.yml')
-    config.log_path = File.join(@root, 'log', "#{environment}.log")
-    config.log_path = [:file_store,
-                       File.join(@root, 'tmp', 'cache', "#{environment}.log")]
-    # TODO: pids? sessions? sockets?
+    config.log_path = File.join(@root, 'log', "#{RAILS_ENV}.log")
+    config.cache_store = [:file_store, File.join(@root, 'tmp', 'cache')]
+    # TODO: tmp dir? multiple instances will break if they share a tmp
+    # This may require fixing Rails. =\
+
+    # Currently you need to mkdir RAILS_ROOT/tmp and chmod/chown it
+    # after installing your app. This sucks!
   end
 
-  # :nodoc:
   def load_app
-    require name
+    require @name
   end
 end

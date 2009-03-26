@@ -9,7 +9,8 @@ Rails apps via RubyGems.
 
 == Usage
 
-[Coming soon]
+Your Rails app will need to be modified a bit to become a gem and work
+with Harker. See test/sample for an example.
 
 == Requirements
 

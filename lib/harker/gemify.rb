@@ -1,4 +1,5 @@
 require 'harker'
+require 'fileutils'
 
 module Harker
   def self.gemify(rails_root)
@@ -29,9 +30,10 @@ require File.dirname(__FILE__) + '/../config/environment'"
 
     File.open(rails_root + '/Rakefile', 'a') { |fp| fp.puts hoe }
     puts "Added hoe block to Rakefile."
-    File.open(rails_root + "/bin/#{project_name}", 'w') { fp.puts bin }
+    FileUtils.mkdir_p(rails_root + '/bin')
+    File.open(rails_root + "/bin/#{project_name}", 'w') {|fp| fp.puts bin }
     puts "Wrote bin launcher."
-    File.open(rails_root + "/lib/#{project_name}.rb", 'w') { fp.puts lib }
+    File.open(rails_root + "/lib/#{project_name}.rb", 'w') {|fp| fp.puts lib }
     puts "Wrote lib file."
     system "cd #{rails_root}; rake check_manifest | patch"
     puts "Wrote manifest."

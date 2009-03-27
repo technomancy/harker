@@ -73,10 +73,11 @@ wrappers.
 
 == Todo
 
-* automate /etc/init.d scripts
-* rake tasks for publishing and remotely installing gem
 * use per-instance config.ru scripts for greater rack flexibility
 * make Hoe play nicely with Rails' test tasks
+* automate /etc/init.d scripts
+* rake tasks for remotely installing gem
+* make it easy to "rake release" to a private gem repo
 
 == License
 

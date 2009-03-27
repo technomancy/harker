@@ -16,7 +16,7 @@ module Harker
     action = args.shift
 
     unless ACTIONS.include?(action)
-      abort "Usage: #{@name} INSTANCE_DIR (#{ACTIONS.join('|')})"
+      abort "Usage: #{name} INSTANCE_DIR (#{ACTIONS.join('|')})"
     end
 
     @root = File.expand_path(args.shift || Dir.pwd)

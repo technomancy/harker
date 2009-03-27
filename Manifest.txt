@@ -31,8 +31,6 @@ test/sample/config/locales/en.yml
 test/sample/config/routes.rb
 test/sample/db/migrate/20090326050232_create_harks.rb
 test/sample/lib/sample_rails.rb
-test/sample/log/development.log
-test/sample/log/test.log
 test/sample/public/404.html
 test/sample/public/422.html
 test/sample/public/500.html

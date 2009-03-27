@@ -10,7 +10,7 @@ your app yourself; see Harker documentation for details.'
 end
 
 if ARGV.include?('-h') or ARGV.include?('--help') or ARGV.size > 1
-  puts "Usage: #{File.dirname($0)} [RAILS_ROOT]"
+  puts "Usage: #{File.basename($0)} [RAILS_ROOT]"
   puts
   puts "Attempts to turn your Rails app into a gem for deployment with harker."
   exit

@@ -1,4 +1,5 @@
 # TODO: not sure if my Rails patches cover tmp/sessions or tmp/sockets
+# TODO: submit patch upstream
 
 class Rails::Configuration
   attr_accessor :tmp_dir

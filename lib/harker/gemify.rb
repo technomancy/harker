@@ -27,6 +27,8 @@ Harker.launch(File.basename($0), ARGV)"
     lib = "# Allow rubygems to load this app
 require File.dirname(__FILE__) + '/../config/environment'"
 
+    FileUtils.mkdir._p(File.join(rails_root, '/bin'))
+
     File.open(rails_root + '/Rakefile', 'a') { |fp| fp.puts hoe }
     puts "Added hoe block to Rakefile."
     File.open(rails_root + "/bin/#{project_name}", 'w') { fp.puts bin }

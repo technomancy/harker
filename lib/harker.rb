@@ -1,6 +1,10 @@
 require 'fileutils'
 
 # Harker lets you deploy Rails apps via RubyGems.
+#
+# These commands get invoked by the bin wrapper of the rails app gem
+# rather than by Harker itself.
+#
 module Harker
   VERSION = '0.0.3'
   ACTIONS = %w(start stop restart init migrate console foreground)
@@ -18,7 +22,7 @@ module Harker
     @root = File.expand_path(args.shift || Dir.pwd)
     @name = name
 
-    load_app unless action == 'init'
+    require @name unless action == 'init'
     self.send(action)
   end
 
@@ -27,7 +31,7 @@ module Harker
     start(false)
   end
 
-  # Start and daemonize the application server
+  # Start and optionally daemonize the application server
   def start(daemonize = true)
     # can has internal consistency plz, Rails?
     Rails::Rack::LogTailer::EnvironmentLog.replace(Rails.configuration.log_path)
@@ -56,13 +60,20 @@ module Harker
     FileUtils.mkdir_p(@root)
     FileUtils.mkdir_p(@root + '/log')
     FileUtils.mkdir_p(@root + '/tmp')
+    FileUtils.mkdir_p(@root + '/db') # In case we use sqlite.
 
-    # TODO: use the in-gem copy of database.yml as a base for this
+    base_db_file = File.join(File.dirname($0), '..', 'config', 'database.yml')
+
     File.open("#{@root}/database.yml", 'w') do |fp|
-      # TODO: be smart about environments; bleh
-      fp.puts({ 'production' => { 'adapter' => 'sqlite3',
-                  'database' => @root + '/db.sqlite3',
-                  'pool' => 5, 'timeout' => 5000 }}.to_yaml)
+      # Need to make sure any sqlite3 DB paths are absolute.
+      db_config = YAML.load_file(base_db_file)
+      db_config.each do |env, hash|
+        if hash['adapter'] =~ /sqlite3?/
+          hash['database'] = File.join(@root, hash['database'])
+        end
+      end
+
+      fp.puts(db_config.to_yaml)
     end
 
     # TODO: write a default config.ru?
@@ -77,7 +88,8 @@ module Harker
   end
 
   def migrate
-    ActiveRecord::Migrator.migrate(RAILS_ROOT + '/db/migrate',
+    puts "Migrating the #{RAILS_ENV} environment of #{@name}..."
+    ActiveRecord::Migrator.migrate(File.join(RAILS_ROOT, 'db', 'migrate'),
                                    ENV["VERSION"] && ENV["VERSION"].to_i)
   end
 
@@ -90,13 +102,9 @@ module Harker
     config.database_configuration_file = File.join(@root, 'database.yml')
     config.log_path = File.join(@root, 'log', "#{RAILS_ENV}.log")
 
-    # 2.3.2 doesn't support tmp_dir config option.
+    # 2.3.2 doesn't support tmp_dir config option; needs a monkeypatch.
     require 'harker/rails_configuration' unless config.respond_to?(:tmp_dir=)
     config.tmp_dir = File.join(@root, '/tmp')
-  end
-
-  def load_app
-    require @name
   end
 
   def pidfile

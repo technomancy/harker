@@ -74,7 +74,6 @@ wrappers.
 == Todo
 
 * automate /etc/init.d scripts
-* configure other environments by default in database.yml
 * rake tasks for publishing and remotely installing gem
 * use per-instance config.ru scripts for greater rack flexibility
 * make Hoe play nicely with Rails' test tasks

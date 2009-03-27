@@ -1,15 +1,19 @@
 #!/usr/bin/env ruby
 
-# TODO: this should be able to take a regular Rails app and help turn
-# it into a gem
+require 'harker/gemify'
 
 begin
   gem 'hoe'
 rescue LoadError
-  abort 'Hoe not found.'
+  abort 'Hoe not found. You can continue without hoe if you gemify
+your app yourself; see Harker documentation for details.' # TODO: document!
 end
 
-root = ARGV.shift || Dir.pwd
+if ARGV.include?('-h') or ARGV.include?('--help') or ARGV.size > 1
+  puts "Usage: #{File.dirname($0)} [RAILS_ROOT]"
+  puts
+  puts "Attempts to turn your Rails app into a gem for deployment with harker."
+  exit
+end
 
-# TODO: write me!
-Harker.gemify(root)
+Harker.gemify(ARGV.shift || Dir.pwd)

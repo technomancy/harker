@@ -54,7 +54,7 @@ class TestHarker < MiniTest::Unit::TestCase
   def test_stop
     start_server_process
     assert File.exists?(ROOT + '/tmp/pids/server.pid'), "No pid found."
-    Harker.launch('sample_rails', [ROOT, 'stop'])
+    Harker.launch('sample_rails', ['stop', ROOT])
     assert_raises(Errno::ECONNREFUSED) { open(URL).read }
   end
 
@@ -68,7 +68,7 @@ class TestHarker < MiniTest::Unit::TestCase
   def harker_action(action)
     $stdout = StringIO.new
     $stderr = StringIO.new
-    Harker.launch('sample_rails', [ROOT, action])
+    Harker.launch('sample_rails', [action, ROOT])
   ensure
     $stdout = STDOUT
     $stderr = STDERR

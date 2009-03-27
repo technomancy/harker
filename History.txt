@@ -1,6 +1,12 @@
+=== 0.0.3 / 2009-03-26
+
+* A release!
+* First pass at automating gemification of Rails apps with bin/harker.
+* Swapped order of Harker.launch args; now action then instance dir.
+* Apps don't need config/environment.rb tweaks to use harker.
+* Got some docs; yay.
+
 === 0.0.1 / 2009-03-25
 
-* 1 major enhancement
-
-  * Birthday!
+ * Birthday!
 

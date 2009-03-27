@@ -2,21 +2,21 @@ require 'fileutils'
 
 # Harker lets you deploy Rails apps via RubyGems.
 module Harker
-  VERSION = '0.0.2'
+  VERSION = '0.0.3'
   ACTIONS = %w(start stop restart init migrate console foreground)
 
   module_function
 
   # Dispatch based on user's command
   def launch(name, args)
-    @root = File.expand_path(args.shift || Dir.pwd)
-    @name = name
-
     action = args.shift
 
     unless ACTIONS.include?(action)
       abort "Usage: #{@name} INSTANCE_DIR (#{ACTIONS.join('|')})"
     end
+
+    @root = File.expand_path(args.shift || Dir.pwd)
+    @name = name
 
     load_app unless action == 'init'
     self.send(action)

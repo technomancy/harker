@@ -4,46 +4,62 @@ http://github.com/technomancy/harker
 
 == Description
 
-A package manager is a terrible thing to waste. Harker lets you deploy
-Rails apps via RubyGems.
+Harker means Rails deployments via RubyGems--because a package manager
+is a terrible thing to waste.
+
+== Setup
+
+Your Rails app will need to be modified a bit to become a gem and work
+with Harker. Running "harker /path/to/rails/app" will attempt to turn
+it into a gem that uses Hoe. It probably won't be perfect, but it's a
+start. See the app in test/sample/ for an example of how this works.
+
+You don't have to use Hoe if you want to turn your app into a gem
+manually or using another library, but it helps.
 
 == Usage
 
-Your Rails app will need to be modified a bit to become a gem and work
-with Harker. See test/sample for an example.
+Once your app is a gem, install it locally with "rake install_gem",
+and you should be able to use the bin wrapper to generate a new
+instance:
+
+  $ your_app init /var/myapp
+
+Then edit /var/myapp/database.yml with your database settings. At that
+point you should be able to bring up your database:
+
+  $ RAILS_ENV=production your_app migrate /var/myapp
+
+Test it out by dropping into the console:
+
+  $ RAILS_ENV=production your_app console /var/myapp
+
+Then you can start and stop your application server via Rack:
+
+  $ RAILS_ENV=production your_app start /var/myapp
+  $ RAILS_ENV=production your_app stop /var/myapp
+
+If you omit the second argument, it defaults to the current directory.
+
+For deployment, simply publish your gem to a gem server (public or
+private), install it on the target server, and launch it via the bin
+wrappers.
+
+TODO: automate /etc/init.d scripts?
 
 == Requirements
 
 * rails (at least 2.3.2)
-* rubygems
-* hoe
 * a Rails app to use it with
+* rubygems
+* hoe (technically optional)
 
 == Install
 
-* sudo gem install harker
+* sudo gem install technomancy-harker --source=http://gems.github.com --source=http://gems.rubyforge.org
 
 == License
 
-(The MIT License)
+Copyright (c) 2009 Phil Hagelberg.
 
-Copyright (c) 2009 Phil Hagelberg
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Licensed under the same terms as Ruby.

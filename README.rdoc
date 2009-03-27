@@ -7,12 +7,27 @@ http://github.com/technomancy/harker
 Harker means Rails deployments via RubyGems--because a package manager
 is a terrible thing to waste.
 
+== Motivation
+
+This will mean you can use the same infrastructure you already rely on
+for your dependencies to manage your application itself. It means
+never having to keep a checkout of your app just for deployment. It
+also becomes very easy to see what versions are installed on a given
+box and even run multiple versions at the same time on different
+ports.
+
+In short: you've already got a package manager. Why are you handling
+installation of your deployed apps with a one-off tool?
+
 == Setup
 
 Your Rails app will need to be modified a bit to become a gem and work
-with Harker. Running "harker /path/to/rails/app" will attempt to turn
-it into a gem that uses Hoe. It probably won't be perfect, but it's a
-start. See the app in test/sample/ for an example of how this works.
+with Harker. But don't worry, these modifications will improve your
+app and make it more awesome. Running "harker /path/to/rails/app" will
+attempt to turn it into a gem that uses Hoe. You may need to perform a
+bit of tweaking in order to get it to build cleanly since every app is
+different--see the one in test/sample/ for an example of how this
+works.
 
 You don't have to use Hoe if you want to turn your app into a gem
 manually or using another library, but it helps.
@@ -45,8 +60,6 @@ For deployment, simply publish your gem to a gem server (public or
 private), install it on the target server, and launch it via the bin
 wrappers.
 
-TODO: automate /etc/init.d scripts?
-
 == Requirements
 
 * rails (at least 2.3.2)
@@ -57,6 +70,14 @@ TODO: automate /etc/init.d scripts?
 == Install
 
 * sudo gem install technomancy-harker --source=http://gems.github.com --source=http://gems.rubyforge.org
+
+== Todo
+
+* automate /etc/init.d scripts
+* configure other environments by default in database.yml
+* rake tasks for publishing and remotely installing gem
+* use per-instance config.ru scripts for greater rack flexibility
+* make Hoe play nicely with Rails' test tasks
 
 == License
 

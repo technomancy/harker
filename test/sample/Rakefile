@@ -6,8 +6,6 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 require 'tasks/rails'
 
-# TODO: Hoe and Rails' test tasks stomp on each other
-# TODO: specify version sanely
 Hoe.new('sample_rails', '1.0.0') do |p|
   p.readme_file = 'README.rdoc'
   p.extra_deps << ["rails", "~> 2.3.2"]

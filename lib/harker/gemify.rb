@@ -10,6 +10,7 @@ module Harker
 Try manually gemifying."
     end
 
+    # TODO: Hoe's test tasks stomp on Rails'
     # TODO: can we specify the version better?
     hoe = "Hoe.new('#{project_name}', '1.0.0') do |p|
   p.extra_deps << ['rails', '~> 2.3.2']

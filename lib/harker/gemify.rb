@@ -32,13 +32,14 @@ require File.dirname(__FILE__) + '/../config/environment'"
 
     File.open(rails_root + '/Rakefile', 'a') { |fp| fp.puts hoe }
     puts "Added hoe block to Rakefile."
-    FileUtils.mkdir._p(File.join(rails_root, '/bin'))
+    FileUtils.mkdir_p(File.join(rails_root, '/bin'))
     File.open(rails_root + "/bin/#{project_name}", 'w') {|fp| fp.puts bin }
     puts "Wrote bin launcher."
     File.open(rails_root + "/lib/#{project_name}.rb", 'w') {|fp| fp.puts lib }
     puts "Wrote lib file."
     system "cd #{rails_root}; touch Manifest.txt; rake check_manifest | patch"
     # TODO: remove log files from manifest.
+
     puts "Wrote Manifest.txt."
     puts "Make sure it doesn't contain files you don't want in the gem."
     puts "Done! Try running rake install_gem."

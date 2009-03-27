@@ -28,7 +28,11 @@ Harker.launch(File.basename($0), ARGV)"
 
     lib = "# Allow rubygems to load this app
 require File.dirname(__FILE__) + '/../config/environment'"
-
+    
+    unless File.exist?(rails_root + '/Manifest.txt')
+      abort "Create a Manifest.txt with a list of the files from your Rails app that you'd like to package"
+    end
+    
     File.open(rails_root + '/Rakefile', 'a') { |fp| fp.puts hoe }
     puts "Added hoe block to Rakefile."
     FileUtils.mkdir_p(rails_root + '/bin')

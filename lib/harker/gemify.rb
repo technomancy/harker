@@ -4,8 +4,8 @@ module Harker
   def self.gemify(rails_root)
     project_name = File.basename(rails_root)
 
-    if File.exist?(rails_root + "/bin/#{project_name}", 'w') or
-        File.exist?(rails_root + "/lib/#{project_name}.rb", 'w')
+    if File.writable?(rails_root + "/bin/#{project_name}") or
+        File.writable?(rails_root + "/lib/#{project_name}.rb")
       abort "Can't write gem files without overwriting existing ones.
 Try manually gemifying."
     end

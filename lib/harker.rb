@@ -8,6 +8,7 @@ require 'fileutils'
 module Harker
   VERSION = '0.0.3'
   ACTIONS = %w(start stop restart init migrate console foreground)
+  GEM_ROOT = File.expand_path(File.join(File.dirname($0), '/../'))
 
   module_function
 
@@ -22,7 +23,14 @@ module Harker
     @root = File.expand_path(args.shift || Dir.pwd)
     @name = name
 
-    require @name unless action == 'init'
+
+    unless action == 'init'
+      require @name
+      # 2.3.2 doesn't support tmp_dir config option; needs a monkeypatch.
+      require 'harker/rails_configuration'
+      Harker.configure(Rails.configuration)
+    end
+
     self.send(action)
   end
 
@@ -62,7 +70,7 @@ module Harker
     FileUtils.mkdir_p(@root + '/tmp')
     FileUtils.mkdir_p(@root + '/db') # In case we use sqlite.
 
-    base_db_file = File.join(File.dirname($0), '..', 'config', 'database.yml')
+    base_db_file = File.join(GEM_ROOT, 'config', 'database.yml')
 
     File.open("#{@root}/database.yml", 'w') do |fp|
       # Need to make sure any sqlite3 DB paths are absolute.
@@ -101,9 +109,6 @@ module Harker
   def configure(config)
     config.database_configuration_file = File.join(@root, 'database.yml')
     config.log_path = File.join(@root, 'log', "#{RAILS_ENV}.log")
-
-    # 2.3.2 doesn't support tmp_dir config option; needs a monkeypatch.
-    require 'harker/rails_configuration' unless config.respond_to?(:tmp_dir=)
     config.tmp_dir = File.join(@root, '/tmp')
   end
 

@@ -2,6 +2,7 @@ require 'harker'
 require 'fileutils'
 
 module Harker
+  # Turn an existing Rails app into a gem.
   def self.gemify(rails_root)
     project_name = File.basename(rails_root)
 

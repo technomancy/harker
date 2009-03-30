@@ -16,13 +16,3 @@ class Rails::Configuration
     end
   end
 end
-
-class Rails::Initializer
-  def self.run(command = :process, configuration = Configuration.new)
-    yield configuration if block_given?
-    Harker.configure(configuration)
-    initializer = new configuration
-    initializer.send(command)
-    initializer
-  end
-end

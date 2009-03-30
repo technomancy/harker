@@ -1,18 +1,12 @@
 require "rubygems"
 require "minitest/unit"
 require 'fileutils'
+require 'timeout'
 require 'open-uri'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__) + "/../lib/")
+$LOAD_PATH.unshift(File.dirname(__FILE__) + "/sample/lib/")
 require 'harker'
-
-begin
-  ENV['RAILS_ENV'] = 'production'
-  gem 'sample_rails'
-rescue LoadError
-  abort "You need the sample_rails gem installed:
-  $ cd #{File.dirname(__FILE__) + '/sample'} && rake install_gem"
-end
 
 class TestHarker < MiniTest::Unit::TestCase
   ROOT = "/tmp/harker-test-#{Process.pid}"
@@ -26,6 +20,7 @@ class TestHarker < MiniTest::Unit::TestCase
 
   def setup
     unless File.exist?(ROOT)
+      Harker::GEM_ROOT.replace(File.dirname(__FILE__) + '/sample/')
       harker_action('init')
       harker_action('migrate')
     end
@@ -54,7 +49,7 @@ class TestHarker < MiniTest::Unit::TestCase
   def test_stop
     start_server_process
     assert File.exists?(ROOT + '/tmp/pids/server.pid'), "No pid found."
-    Harker.launch('sample_rails', ['stop', ROOT])
+    Harker.launch('sample_rails', ['stop', ROOT]); sleep 0.1
     assert_raises(Errno::ECONNREFUSED) { open(URL).read }
   end
 
@@ -75,8 +70,11 @@ class TestHarker < MiniTest::Unit::TestCase
   end
 
   def start_server_process
-    `cd #{File.dirname(__FILE__)}/.. ; ruby -I:lib test/sample/bin/sample_rails #{ROOT} start`
-    loop { break if File.exist?(ROOT + '/tmp/pids/server.pid'); sleep 0.1 }
+    `cd #{File.dirname(__FILE__)}/.. ; ruby -I:lib:test/sample/lib test/sample/bin/sample_rails start #{ROOT}`
+    Timeout.timeout(5) do
+      loop { break if File.exist?(ROOT + '/tmp/pids/server.pid'); sleep 0.1 }
+    end
+    sleep 0.1 # Waiting for pid to exist isn't enough; it looks like.
   end
 end
 

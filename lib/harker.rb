@@ -8,7 +8,7 @@ require 'fileutils'
 module Harker
   VERSION = '0.0.3'
   ACTIONS = %w(start stop restart init migrate console foreground)
-  GEM_ROOT = File.expand_path(File.join(File.dirname($0), '/../'))
+  GEM_ROOT = Gem.loaded_specs[File.basename($0)].full_gem_path rescue '.'
 
   module_function
 
@@ -23,12 +23,10 @@ module Harker
     @root = File.expand_path(args.shift || Dir.pwd)
     @name = name
 
-
     unless action == 'init'
-      require @name
       # 2.3.2 doesn't support tmp_dir config option; needs a monkeypatch.
       require 'harker/rails_configuration'
-      Harker.configure(Rails.configuration)
+      require @name
     end
 
     self.send(action)

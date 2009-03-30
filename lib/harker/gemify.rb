@@ -17,9 +17,10 @@ Try manually gemifying."
     # TODO: can we specify the version better?
     hoe = "require 'hoe'
 Hoe.new('#{project_name}', '1.0.0') do |p|
+  p.summary = 'A Rails application.' # FIXME!
+  p.developer('Your Name', 'you@example.com') # FIXME!
   p.extra_deps << ['rails', '~> 2.3.2']
   p.extra_deps << ['harker', '~> #{Harker::VERSION}']
-  p.developer('Your Name', 'you@example.com') # FIXME!
 end"
 
     bin = "#!/usr/bin/env ruby

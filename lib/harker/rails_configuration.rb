@@ -1,6 +1,9 @@
 # TODO: not sure if my Rails patches cover tmp/sessions or tmp/sockets
 # TODO: submit patch upstream
 
+gem 'rails'
+require 'initializer'
+
 class Rails::Configuration
   attr_accessor :tmp_dir
 
@@ -14,5 +17,15 @@ class Rails::Configuration
     else
       :memory_store
     end
+  end
+end
+
+class Rails::Initializer
+  def self.run(command = :process, configuration = Rails::Configuration.new)
+    yield configuration if block_given?
+    Harker.configure(configuration)
+    initializer = new configuration
+    initializer.send(command)
+    initializer
   end
 end

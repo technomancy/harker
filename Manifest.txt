@@ -62,4 +62,5 @@ test/sample/test/performance/browsing_test.rb
 test/sample/test/test_helper.rb
 test/sample/test/unit/hark_test.rb
 test/sample/test/unit/helpers/harks_helper_test.rb
+test/test_gemify.sh
 test/test_harker.rb

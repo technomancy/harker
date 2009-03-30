@@ -1,4 +1,11 @@
 # A patched copy of what Rails' script/server runs.
+
+# These changes were submitted upstream to Rails:
+# http://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2379
+
+# We can remove this file once that patch is accepted if we don't care
+# about supporting older versions.
+
 # Only two changes were made, noted below by comments beginning with "Harker"
 
 require 'active_support'

@@ -1,5 +1,10 @@
-# TODO: not sure if my Rails patches cover tmp/sessions or tmp/sockets
-# TODO: submit patch upstream
+# This monkeypatches Rails to allow tmp_dir to be configured.
+
+# It's been submitted upstream:
+# http://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2379
+
+# We can remove the Configuration monkeypatch once the above patch is
+# accepted if we don't care about supporting older versions.
 
 gem 'rails'
 require 'initializer'

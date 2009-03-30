@@ -7,6 +7,9 @@ lib/harker.rb
 lib/harker/gemify.rb
 lib/harker/rails_configuration.rb
 lib/harker/server.rb
+lib/harker/templates/bin.erb
+lib/harker/templates/hoe.erb
+lib/harker/templates/lib.erb
 test/sample/Manifest.txt
 test/sample/README.rdoc
 test/sample/Rakefile

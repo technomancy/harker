@@ -15,4 +15,4 @@ rake install_gem
 dummy init /tmp/dummy-instance
 cd /tmp/dummy-instance
 dummy migrate
-dummy foreground
+dummy start

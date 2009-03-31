@@ -12,8 +12,6 @@ module Harker
 Try manually gemifying."
     end
 
-    # TODO: Hoe's test tasks stomp on Rails'
-
     File.open(File.join(rails_root, '/Rakefile'), 'a') do |fp|
       fp.puts template('hoe')
       puts "Added hoe block to Rakefile."
@@ -31,7 +29,7 @@ Try manually gemifying."
     end
 
     # Submitted a patch to hoe to make it ignore log files by default,
-    # but folks should still give it a once-over manually.
+    # but folks should still give it a once-over manually anyway.
     system "cd #{rails_root}; touch Manifest.txt; rake check_manifest | patch"
     puts "Wrote Manifest.txt."
     puts "Ensure the manifest doesn't contain files you don't want in the gem."

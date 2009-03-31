@@ -51,7 +51,7 @@ Test it out by dropping into the console:
 
 Then you can start and stop your application server via Rack:
 
-  $ RAILS_ENV=production your_app start /var/myapp
+  $ RAILS_ENV=production your_app start /var/myapp --daemon
   $ RAILS_ENV=production your_app stop /var/myapp
 
 If you omit the second argument, it defaults to the current directory.

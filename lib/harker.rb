@@ -7,7 +7,7 @@ require 'fileutils'
 #
 module Harker
   VERSION = '0.0.3'
-  ACTIONS = %w(start stop restart init migrate console foreground)
+  ACTIONS = %w(start stop restart init migrate console)
   GEM_ROOT = Gem.loaded_specs[File.basename($0)].full_gem_path rescue '.'
 
   module_function
@@ -20,6 +20,7 @@ module Harker
       abort "Usage: #{name} INSTANCE_DIR (#{ACTIONS.join('|')})"
     end
 
+    # TODO: how to make this optional but still work with script/server args?
     @root = File.expand_path(args.shift || Dir.pwd)
     @name = name
 
@@ -32,21 +33,15 @@ module Harker
     self.send(action)
   end
 
-  # Start the application server in the foreground.
-  def foreground
-    start(false)
-  end
-
   # Start and optionally daemonize the application server
-  def start(daemonize = true)
+  def start
     # can has internal consistency plz, Rails?
     Rails::Rack::LogTailer::EnvironmentLog.replace(Rails.configuration.log_path)
     # http://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2350
     # Submitted a patch to Rails, but this lets it work with 2.3.2
 
-    ARGV.replace ["--config=#{@root}/config.ru"]
-    ARGV.push('--daemon') if daemonize
-    
+    # TODO: document server CLI config options.
+    # TODO: allow config options to be stored as yaml in instance dir
     abort "Can't start; pidfile exists at #{pidfile}." if File.exist? pidfile
     require 'harker/server'
   end
@@ -81,8 +76,6 @@ module Harker
 
       fp.puts(db_config.to_yaml)
     end
-
-    # TODO: write a default config.ru?
 
     puts "Initialized #{@name} instance in #{@root}..."
     puts

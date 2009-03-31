@@ -6,7 +6,7 @@ require 'fileutils'
 # rather than by Harker itself.
 #
 module Harker
-  VERSION = '0.0.3'
+  VERSION = '0.5.0'
   ACTIONS = %w(start stop restart init migrate console)
   GEM_ROOT = Gem.loaded_specs[File.basename($0)].full_gem_path rescue '.'
 
@@ -23,7 +23,7 @@ The start command takes the same arguments as script/server."
 
     # We need to get rid of the first arg if it's the optional
     # instance directory so script/server doesn't get confused.
-    @root = if File.directory? args.first
+    @root = if File.directory? args.first.to_s or action == 'init'
               File.expand_path args.shift
             else
               Dir.pwd

@@ -1,3 +1,9 @@
+=== 0.5.0 / 2009-03-30
+
+* Use gem's config/database.yml for a base.
+* Gemifying existing apps works now.
+* Accept arguments for script/server when starting app.
+
 === 0.0.3 / 2009-03-26
 
 * A release!

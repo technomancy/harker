@@ -42,30 +42,32 @@ Once your app is a gem, install it locally with "rake install_gem",
 and you should be able to use the bin wrapper to generate a new
 instance:
 
-  $ your_app init ~/apps/your_app_3000
+  $ your_app init ~/apps/your_app_3001
 
 Then edit /var/myapp/database.yml with your database settings. At that
 point you should be able to bring up your database:
 
-  $ your_app migrate ~/apps/your_app_3000
+  $ your_app migrate ~/apps/your_app_3001
 
 Test it out by dropping into the console:
 
-  $ your_app console ~/apps/your_app_3000
+  $ your_app console ~/apps/your_app_3001
 
 Then you can start and stop your application server via Rack:
 
-  $ your_app start ~/apps/your_app_3000 --daemon
-  $ your_app stop ~/apps/your_app_3000
+  $ your_app start ~/apps/your_app_3001 --daemon --port=3001
+  $ your_app stop ~/apps/your_app_3001
 
-To configure the web server, create a config.ru file in your instance
-directory, and Rails will pick that up with Rack.
+The start command takes all the same arguments as script/server. To
+configure it in a way that doesn't require command-line arguments,
+create a config.ru file in your instance directory, and Rails will
+pick that up with Rack.
 
 If you omit the second argument, it defaults to the current directory.
 
 For deployment, simply publish your gem to a gem server (public or
 private), install it on the target server, and launch it via the bin
-wrappers.
+wrapper.
 
 == Requirements
 

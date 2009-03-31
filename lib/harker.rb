@@ -6,7 +6,7 @@ require 'fileutils'
 # rather than by Harker itself.
 #
 module Harker
-  VERSION = '0.5.0'
+  VERSION = '0.5.1'
   ACTIONS = %w(start stop restart init migrate console)
   GEM_ROOT = Gem.loaded_specs[File.basename($0)].full_gem_path rescue '.'
 
@@ -17,7 +17,7 @@ module Harker
     action = args.shift
 
     unless ACTIONS.include?(action)
-      abort "Usage: #{name} INSTANCE_DIR (#{ACTIONS.join('|')}).
+      abort "Usage: #{name} (#{ACTIONS.join('|')}) [INSTANCE_DIR] [START_ARGS]
 The start command takes the same arguments as script/server."
     end
 

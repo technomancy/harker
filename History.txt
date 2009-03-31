@@ -1,3 +1,7 @@
+=== 0.5.1 / 2009-03-30
+
+* Fixed a problem with the Usage message.
+
 === 0.5.0 / 2009-03-30
 
 * Use gem's config/database.yml for a base.

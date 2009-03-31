@@ -6,6 +6,7 @@ module Harker
   # Turn an existing Rails app into a gem.
   def self.gemify(rails_root)
     @project_name = File.basename(rails_root)
+
     if File.exist?(rails_root + "/bin/#{@project_name}") or
         File.exist?(rails_root + "/lib/#{@project_name}.rb")
       abort "Can't write gem files without overwriting existing ones.

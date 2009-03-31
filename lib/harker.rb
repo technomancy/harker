@@ -17,11 +17,18 @@ module Harker
     action = args.shift
 
     unless ACTIONS.include?(action)
-      abort "Usage: #{name} INSTANCE_DIR (#{ACTIONS.join('|')})"
+      abort "Usage: #{name} INSTANCE_DIR (#{ACTIONS.join('|')}).
+The start command takes the same arguments as script/server."
     end
 
-    # TODO: how to make this optional but still work with script/server args?
-    @root = File.expand_path(args.shift || Dir.pwd)
+    # We need to get rid of the first arg if it's the optional
+    # instance directory so script/server doesn't get confused.
+    @root = if File.directory? args.first
+              File.expand_path args.shift
+            else
+              Dir.pwd
+            end
+
     @name = name
 
     unless action == 'init'
@@ -35,13 +42,10 @@ module Harker
 
   # Start and optionally daemonize the application server
   def start
-    # can has internal consistency plz, Rails?
-    Rails::Rack::LogTailer::EnvironmentLog.replace(Rails.configuration.log_path)
     # http://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2350
     # Submitted a patch to Rails, but this lets it work with 2.3.2
+    Rails::Rack::LogTailer::EnvironmentLog.replace(Rails.configuration.log_path)
 
-    # TODO: document server CLI config options.
-    # TODO: allow config options to be stored as yaml in instance dir
     abort "Can't start; pidfile exists at #{pidfile}." if File.exist? pidfile
     require 'harker/server'
   end
@@ -53,6 +57,7 @@ module Harker
 
   def restart
     stop
+  rescue SystemExit
     start
   end
 
@@ -83,12 +88,12 @@ module Harker
     puts "Optionally configure your web server via rack in #{@root}/config.ru."
     puts
     puts "Migrate your DB with: #{@name} migrate"
-    puts "Then launch with: #{@name} start"
+    puts "Then launch with: #{@name} start --daemon"
   end
 
   def migrate
     puts "Migrating the #{RAILS_ENV} environment of #{@name}..."
-    ActiveRecord::Migrator.migrate(File.join(RAILS_ROOT, 'db', 'migrate'),
+    ActiveRecord::Migrator.migrate(File.join(Rails.root, 'db', 'migrate'),
                                    ENV["VERSION"] && ENV["VERSION"].to_i)
   end
 

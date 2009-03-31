@@ -6,4 +6,6 @@ Hoe.new('<%= @project_name %>', '1.0.0') do |p|
   p.extra_deps << ['harker', '~> <%= Harker::VERSION %>']
 end
 
-# TODO: remove hoe's testing tasks once hoe supports it (next release)
+# TODO: clean this up once the next hoe is released.
+Rake::TaskManager.instance_eval { @tasks.delete_if { |k,_| k =~ /^test_/ } }
+require 'rake/testtask'

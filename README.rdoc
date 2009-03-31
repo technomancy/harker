@@ -13,8 +13,11 @@ This will mean you can use the same infrastructure you already rely on
 for your dependencies to manage your application itself. It means
 never having to keep a checkout of your app just for deployment. It
 also becomes very easy to see what versions are installed on a given
-box and even run multiple versions at the same time on different
-ports.
+box and run multiple instances (of the same or different versions) at
+the same time on different ports.
+
+Your app code will live in your gem home, but all the files specific
+to a given instance will live in an instance directory.
 
 In short: you've already got a package manager. Why are you handling
 installation of your deployed apps with a one-off tool?
@@ -27,7 +30,8 @@ app and make it more awesome. Running "harker /path/to/rails/app" will
 attempt to turn it into a gem that uses Hoe. You may need to perform a
 bit of tweaking in order to get it to build cleanly since every app is
 different--see the one in test/sample/ for an example of how this
-works.
+works. In particular, be sure Manifest.txt does not include any files
+that shouldn't go in the gem, such as pid or log files.
 
 You don't have to use Hoe if you want to turn your app into a gem
 manually or using another library, but it helps.
@@ -38,21 +42,24 @@ Once your app is a gem, install it locally with "rake install_gem",
 and you should be able to use the bin wrapper to generate a new
 instance:
 
-  $ your_app init /var/myapp
+  $ your_app init ~/apps/your_app_3000
 
 Then edit /var/myapp/database.yml with your database settings. At that
 point you should be able to bring up your database:
 
-  $ RAILS_ENV=production your_app migrate /var/myapp
+  $ your_app migrate ~/apps/your_app_3000
 
 Test it out by dropping into the console:
 
-  $ RAILS_ENV=production your_app console /var/myapp
+  $ your_app console ~/apps/your_app_3000
 
 Then you can start and stop your application server via Rack:
 
-  $ RAILS_ENV=production your_app start /var/myapp --daemon
-  $ RAILS_ENV=production your_app stop /var/myapp
+  $ your_app start ~/apps/your_app_3000 --daemon
+  $ your_app stop ~/apps/your_app_3000
+
+To configure the web server, create a config.ru file in your instance
+directory, and Rails will pick that up with Rack.
 
 If you omit the second argument, it defaults to the current directory.
 
@@ -73,11 +80,9 @@ wrappers.
 
 == Todo
 
-* use per-instance config.ru scripts for greater rack flexibility
-* make Hoe play nicely with Rails' test tasks
-* automate /etc/init.d scripts
 * rake tasks for remotely installing gem
 * make it easy to "rake release" to a private gem repo
+* test, test, test. try it out with more rails apps!
 
 == License
 

@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name = %q{harker}
-  s.version = "0.5.1"
+  s.version = "0.5.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Phil Hagelberg"]
-  s.date = %q{2009-03-30}
+  s.date = %q{2009-03-31}
   s.default_executable = %q{harker}
   s.description = %q{Harker means Rails deployments via RubyGems--because a package manager is a terrible thing to waste.}
   s.email = ["technomancy@gmail.com"]
@@ -28,17 +28,17 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<rails>, ["~> 2.3.2"])
       s.add_development_dependency(%q<minitest>, ["~> 1.3.1"])
       s.add_development_dependency(%q<sqlite3-ruby>, ["~> 1.2.4"])
-      s.add_development_dependency(%q<hoe>, [">= 1.11.0"])
+      s.add_development_dependency(%q<hoe>, [">= 1.12.0"])
     else
       s.add_dependency(%q<rails>, ["~> 2.3.2"])
       s.add_dependency(%q<minitest>, ["~> 1.3.1"])
       s.add_dependency(%q<sqlite3-ruby>, ["~> 1.2.4"])
-      s.add_dependency(%q<hoe>, [">= 1.11.0"])
+      s.add_dependency(%q<hoe>, [">= 1.12.0"])
     end
   else
     s.add_dependency(%q<rails>, ["~> 2.3.2"])
     s.add_dependency(%q<minitest>, ["~> 1.3.1"])
     s.add_dependency(%q<sqlite3-ruby>, ["~> 1.2.4"])
-    s.add_dependency(%q<hoe>, [">= 1.11.0"])
+    s.add_dependency(%q<hoe>, [">= 1.12.0"])
   end
 end

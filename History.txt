@@ -1,3 +1,7 @@
+=== 0.5.2 / 2009-03-31
+
+* Remove Hoe test task if supported.
+
 === 0.5.1 / 2009-03-30
 
 * Fixed a problem with the Usage message.

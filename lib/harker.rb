@@ -6,7 +6,7 @@ require 'fileutils'
 # rather than by Harker itself.
 #
 module Harker
-  VERSION = '0.5.1'
+  VERSION = '0.5.2'
   ACTIONS = %w(start stop restart init migrate console)
   GEM_ROOT = Gem.loaded_specs[File.basename($0)].full_gem_path rescue '.'
 

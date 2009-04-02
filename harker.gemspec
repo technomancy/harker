@@ -28,17 +28,17 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<rails>, ["~> 2.3.2"])
       s.add_development_dependency(%q<minitest>, ["~> 1.3.1"])
       s.add_development_dependency(%q<sqlite3-ruby>, ["~> 1.2.4"])
-      s.add_development_dependency(%q<hoe>, [">= 1.12.0"])
+      s.add_development_dependency(%q<hoe>, [">= 1.12.1"])
     else
       s.add_dependency(%q<rails>, ["~> 2.3.2"])
       s.add_dependency(%q<minitest>, ["~> 1.3.1"])
       s.add_dependency(%q<sqlite3-ruby>, ["~> 1.2.4"])
-      s.add_dependency(%q<hoe>, [">= 1.12.0"])
+      s.add_dependency(%q<hoe>, [">= 1.12.1"])
     end
   else
     s.add_dependency(%q<rails>, ["~> 2.3.2"])
     s.add_dependency(%q<minitest>, ["~> 1.3.1"])
     s.add_dependency(%q<sqlite3-ruby>, ["~> 1.2.4"])
-    s.add_dependency(%q<hoe>, [">= 1.12.0"])
+    s.add_dependency(%q<hoe>, [">= 1.12.1"])
   end
 end

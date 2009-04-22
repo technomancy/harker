@@ -32,6 +32,7 @@ The start command takes the same arguments as script/server."
     @name = name
 
     unless action == 'init'
+      Dir["#{@root}/extensions/*rb"].each { |f| load f }
       # 2.3.2 doesn't support tmp_dir config option; needs a monkeypatch.
       require 'harker/rails_configuration'
       require @name
@@ -63,10 +64,11 @@ The start command takes the same arguments as script/server."
 
   # Initialize a new instance of your application
   def init
-    FileUtils.mkdir_p(@root)
-    FileUtils.mkdir_p(@root + '/log')
-    FileUtils.mkdir_p(@root + '/tmp')
-    FileUtils.mkdir_p(@root + '/db') # In case we use sqlite.
+    FileUtils.mkdir_p(@root,
+                      File.join(@root, 'tmp'),
+                      File.join(@root, 'log'),
+                      File.join(@root, 'db'), # in case of sqlite
+                      File.join(@root, 'extensions'))
 
     base_db_file = File.join(GEM_ROOT, 'config', 'database.yml')
 
@@ -105,7 +107,7 @@ The start command takes the same arguments as script/server."
   def configure(config)
     config.database_configuration_file = File.join(@root, 'database.yml')
     config.log_path = File.join(@root, 'log', "#{RAILS_ENV}.log")
-    config.tmp_dir = File.join(@root, '/tmp')
+    config.tmp_dir = File.join(@root, 'tmp')
   end
 
   def pidfile

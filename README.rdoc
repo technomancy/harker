@@ -44,8 +44,8 @@ instance:
 
   $ your_app init ~/apps/your_app_3001
 
-Then edit /var/myapp/database.yml with your database settings. At that
-point you should be able to bring up your database:
+Then edit ~/apps/your_app_3001/database.yml with your database
+settings. At that point you should be able to bring up your database:
 
   $ your_app migrate ~/apps/your_app_3001
 
@@ -67,7 +67,15 @@ If you omit the second argument, it defaults to the current directory.
 
 For deployment, simply publish your gem to a gem server (public or
 private), install it on the target server, and launch it via the bin
-wrapper.
+wrapper as shown above.
+
+== Extensions
+
+Sometimes it becomes necessary to hot-patch a deployed app. Instead of
+editing the code inside your gem home, (which is Fraught with Peril)
+you can place .rb files inside your instance directory's extensions/
+directory. These will be loaded immediately after the application is
+required.
 
 == Requirements
 

@@ -1,3 +1,8 @@
+=== 0.5.3 / 2009-04-21
+
+* Load app extensions on a per-instance basis.
+* Depend on hoe so Rails' test task isn't interfered with.
+
 === 0.5.2 / 2009-03-31
 
 * Remove Hoe test task if supported.

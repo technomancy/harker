@@ -64,11 +64,9 @@ The start command takes the same arguments as script/server."
 
   # Initialize a new instance of your application
   def init
-    FileUtils.mkdir_p(@root,
-                      File.join(@root, 'tmp'),
-                      File.join(@root, 'log'),
-                      File.join(@root, 'db'), # in case of sqlite
-                      File.join(@root, 'extensions'))
+    %w(tmp log db extensions).each do |d|
+      FileUtils.mkdir_p(File.join(@root, d))
+    end
 
     base_db_file = File.join(GEM_ROOT, 'config', 'database.yml')
 
@@ -84,13 +82,15 @@ The start command takes the same arguments as script/server."
       fp.puts(db_config.to_yaml)
     end
 
-    puts "Initialized #{@name} instance in #{@root}..."
-    puts
-    puts "Configure your database by editing #{@root}/database.yml."
-    puts "Optionally configure your web server via rack in #{@root}/config.ru."
-    puts
-    puts "Migrate your DB with: #{@name} migrate"
-    puts "Then launch with: #{@name} start --daemon"
+    puts <<-END
+    Initialized #{@name} instance in #{@root}...
+    
+    Configure your database by editing #{@root}/database.yml.
+    Optionally configure your web server via rack in #{@root}/config.ru.
+    
+    Migrate your DB with: #{@name} migrate
+    Then launch with: #{@name} start --daemon
+    END
   end
 
   def migrate

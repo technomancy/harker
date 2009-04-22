@@ -70,7 +70,7 @@ class TestHarker < MiniTest::Unit::TestCase
   end
 
   def start_server_process
-    `cd #{File.dirname(__FILE__)}/.. ; ruby -I:lib:test/sample/lib test/sample/bin/sample_rails start #{ROOT}`
+    `cd #{File.dirname(__FILE__)}/.. ; ruby -I:lib:test/sample/lib test/sample/bin/sample_rails start #{ROOT} -d`
     Timeout.timeout(5) do
       loop { break if File.exist?(ROOT + '/tmp/pids/server.pid'); sleep 0.1 }
     end

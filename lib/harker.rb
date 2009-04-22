@@ -32,10 +32,10 @@ The start command takes the same arguments as script/server."
     @name = name
 
     unless action == 'init'
-      Dir["#{@root}/extensions/*rb"].each { |f| load f }
       # 2.3.2 doesn't support tmp_dir config option; needs a monkeypatch.
       require 'harker/rails_configuration'
       require @name
+      Dir["#{@root}/extensions/*rb"].each { |f| load f }
     end
 
     self.send(action)
